@@ -7,16 +7,16 @@ export class ProductsService {
 
     private products: Product[] = [];
 
-    getProducts() {
+    async getProducts(): Promise<Product[]> {
         return [...this.products];
     }
 
-    getSingleProduct(productId: string) {
+    async getSingleProduct(productId: string): Promise<Product> {
         const product = this.findProduct(productId)[0];
         return { ...product };
     }
 
-    insertProduct(title: string, desc: string, price: number) {
+    async insertProduct(title: string, desc: string, price: number): Promise<any> {
         const prodId = Math.random().toString();
         const newProduct = new Product(prodId, title, desc, price);
         this.products.push(newProduct);
