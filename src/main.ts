@@ -6,30 +6,30 @@ import { AppModule } from './app.module';
 // Create a logger instance
 const logger = new Logger('Main');
 
-// Create the microservice options object
+// Set the port
+const port = process.env.PORT ? Number(process.env.PORT) : 3000;
 
+// Create the microservice HTTP.TCP options object
 const microserviceOptions: MicroserviceOptions = {
   transport: Transport.TCP,
   options: {
     host: '127.0.0.1',
-    port: 4200,
+    port: port,
   },
 }
 
 async function bootstrap() {
-  const port = process.env.PORT ? Number(process.env.PORT) : 8080;
   const app = await NestFactory.createMicroservice<MicroserviceOptions>(AppModule, microserviceOptions);
-  app.listen(() => { logger.log('Microservice is listening.....') });
-
-  /*
-    const options = new DocumentBuilder()
-      .setVersion('1.0')
-      .build();
-  
-    const document = SwaggerModule.createDocument(app, options);
-    SwaggerModule.setup('/docs', app, document);*/
-
-  // await app.listen(3000);
-  // await app.listen(() => console.log('Microservice listening on port:', port));
+  app.listen(() => { logger.log('Microservice is listening...port:' + port) });
 }
 bootstrap();
+
+// Create the microservice Redis options object
+/*
+const microserviceOptions: MicroserviceOptions = {
+  transport: Transport.REDIS,
+  options: {
+    url: 'redis://localhost:6379',
+  },
+}
+*/
