@@ -1,5 +1,5 @@
 import { Controller, Logger } from '@nestjs/common';
-import { MessagePattern } from '@nestjs/microservices';
+import { MessagePattern, Payload } from '@nestjs/microservices';
 import { ApiTags } from '@nestjs/swagger';
 import { AppService } from './app.service';
 
@@ -19,7 +19,7 @@ export class AppController {
   }*/
 
   @MessagePattern('hello')
-  hello(input?: string): string {
+  async hello(input?: string): Promise<any> {
     this.logger.log('Adding hello method' + input.toString()); // Log something on every call
     return `Hello, ${input || 'there'}!`;
   }
@@ -27,7 +27,16 @@ export class AppController {
   @MessagePattern('add')
   async accumulate(data: number[]) {
     this.logger.log('Adding accumulate method' + data.toString()); // Log something on every call
+    // console.log(`Channel: ${context.getChannel()}`);
     return this.appService.accumulate(data);
     // return (data || []).reduce((a, b) => a + b);
+  }
+
+
+  @MessagePattern('notifications')
+  // getNotifications(@Payload() data: number[], @Ctx() context: RedisContext) {
+  getNotifications(@Payload() data: number[]) {
+    return `Hello, ${data || 'there'}!`;
+    // console.log(data, `Channel: ${context.getChannel()}`);
   }
 }
